@@ -183,6 +183,10 @@ if tokenizer.charMode:
     ctx = [tokenizer.stoi.get(s, tokenizer.UNKNOWN_CHAR) for s in context]
 else:
     ctx = tokenizer.tokenizer.encode(context)
+    if len(ctx) > ctx_len:
+        print(f"\nWarning: Input too long ({len(ctx)} tokens). Truncating to last {ctx_len} tokens.")
+        ctx = ctx[-ctx_len:]
+        context = tokenizer.tokenizer.decode(ctx)
 src_len = len(ctx)
 src_ctx = ctx.copy()
 
