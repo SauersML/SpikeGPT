@@ -11,11 +11,15 @@ import platform
 
 args = types.SimpleNamespace()
 
+args.interactive = False
 try:
-    os.environ["CUDA_VISIBLE_DEVICES"] = sys.argv[1]
-    args.interactive = len(sys.argv) > 2 and sys.argv[2] == '--interactive'
+    if len(sys.argv) > 1:
+        if sys.argv[1] == '--interactive':
+            args.interactive = True
+        else:
+            os.environ["CUDA_VISIBLE_DEVICES"] = sys.argv[1]
+            args.interactive = len(sys.argv) > 2 and sys.argv[2] == '--interactive'
 except:
-    args.interactive = False
     pass
 
 np.set_printoptions(precision=4, suppress=True, linewidth=200)
