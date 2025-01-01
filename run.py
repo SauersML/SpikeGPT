@@ -7,13 +7,20 @@ import math, os, sys, types, time, gc
 import torch
 from src.utils import TOKENIZER
 import matplotlib.ticker as ticker
+import platform
 try:
     os.environ["CUDA_VISIBLE_DEVICES"] = sys.argv[1]
 except:
     pass
-torch.backends.cudnn.benchmark = True
-torch.backends.cudnn.allow_tf32 = True
-torch.backends.cuda.matmul.allow_tf32 = True
+
+if args.RUN_DEVICE == "cuda":
+    torch.backends.cudnn.benchmark = True
+    torch.backends.cudnn.allow_tf32 = True
+    torch.backends.cuda.matmul.allow_tf32 = True
+else:
+    # no need for cuda-specific lines
+    pass
+
 np.set_printoptions(precision=4, suppress=True, linewidth=200)
 args = types.SimpleNamespace()
 
@@ -22,7 +29,16 @@ args = types.SimpleNamespace()
 # Step 1: set model & config (use v4 to run your trained-from-scratch models. v4 and v4neo are compatible)
 ########################################################################################################
 
-args.RUN_DEVICE = "cuda" # 'cuda' // 'cpu' (already fast)
+# Auto-detect MPS vs CUDA vs CPU
+if torch.backends.mps.is_available() and platform.machine() == "arm64":
+    args.RUN_DEVICE = "mps"    # Use Apple's Metal (MPS) for M1/M2 Mac
+elif torch.cuda.is_available():
+    args.RUN_DEVICE = "cuda"   # Use NVIDIA GPU
+else:
+    args.RUN_DEVICE = "cpu"    # Fall back to CPU
+
+print(f"Auto-selected RUN_DEVICE = {args.RUN_DEVICE}")
+
 args.FLOAT_MODE = "fp32" # fp16 (good for GPU, does not work for CPU) // fp32 (good for CPU) // bf16 (less accurate, but works for CPU)
 
 # if args.RUN_DEVICE == "cuda":
