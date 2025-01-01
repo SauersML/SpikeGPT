@@ -87,8 +87,19 @@ os.environ["RWKV_RUN_DEVICE"] = args.RUN_DEVICE
 
 
 if args.interactive:
-    print("Enter your context (press Ctrl+D or Ctrl+Z when finished):")
-    context = sys.stdin.read().strip()
+    print("Enter your context (press Enter twice when finished):")
+    lines = []
+    try:
+        while True:
+            line = input()
+            if line.strip() == "":
+                break
+            lines.append(line)
+        context = '\n'.join(lines)
+        if not context.strip():  # If empty input provided
+            context = 'Hello!'  # Default fallback
+    except EOFError:  # Handle Ctrl+D/Ctrl+Z more gracefully
+        context = '\n'.join(lines) if lines else 'Hello!'
 else:
     context = 'Prehistoric man sketched an incredible array of prehistoric beasts on the rough limestone walls of a cave in modern day France 36,000 years ago. Now, with the help of cutting-edge technology, those works of art in the Chauvet-Pont-d’Arc Cave have been reproduced to create the biggest replica cave in the world. The manmade cavern named the Caverne du Pont-d’Arc has been built a few miles from the original site in Vallon-Pont-D’arc in Southern France and contains 1,000 painstakingly-reproduced drawings as well as around 450 bones and other features...\n Cavemen and women sketched an incredible array of prehistoric beasts on the rough limestone walls of a cave 36,000 years ago and now a replica has been created (pictured)'
 
