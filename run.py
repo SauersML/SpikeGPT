@@ -138,6 +138,8 @@ print(f'\nUsing {args.RUN_DEVICE.upper()}. Loading {MODEL_NAME}...')
 from src.model_run import RWKV_RNN
 
 model = RWKV_RNN(args)
+if args.RUN_DEVICE != "cpu":
+    model = model.to(args.RUN_DEVICE)
 
 print(f'\nOptimizing speed...')
 #out, _ = model.forward([187], None, None, None)
