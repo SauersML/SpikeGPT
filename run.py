@@ -16,14 +16,6 @@ try:
 except:
     pass
 
-if args.RUN_DEVICE == "cuda":
-    torch.backends.cudnn.benchmark = True
-    torch.backends.cudnn.allow_tf32 = True
-    torch.backends.cuda.matmul.allow_tf32 = True
-else:
-    # no need for cuda-specific lines
-    pass
-
 np.set_printoptions(precision=4, suppress=True, linewidth=200)
 
 ########################################################################################################
@@ -39,6 +31,11 @@ else:
     args.RUN_DEVICE = "cpu"    # Fall back to CPU
 
 print(f"Auto-selected RUN_DEVICE = {args.RUN_DEVICE}")
+
+if args.RUN_DEVICE == "cuda":
+    torch.backends.cudnn.benchmark = True
+    torch.backends.cudnn.allow_tf32 = True
+    torch.backends.cuda.matmul.allow_tf32 = True
 
 args.FLOAT_MODE = "fp32" # fp16 (good for GPU, does not work for CPU) // fp32 (good for CPU) // bf16 (less accurate, but works for CPU)
 
