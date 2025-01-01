@@ -8,6 +8,9 @@ import torch
 from src.utils import TOKENIZER
 import matplotlib.ticker as ticker
 import platform
+
+args = types.SimpleNamespace()
+
 try:
     os.environ["CUDA_VISIBLE_DEVICES"] = sys.argv[1]
 except:
@@ -22,8 +25,6 @@ else:
     pass
 
 np.set_printoptions(precision=4, suppress=True, linewidth=200)
-args = types.SimpleNamespace()
-
 
 ########################################################################################################
 # Step 1: set model & config (use v4 to run your trained-from-scratch models. v4 and v4neo are compatible)
